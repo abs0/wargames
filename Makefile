@@ -6,10 +6,10 @@ INSTALL_PROGRAM ?= install -m 0755
 INSTALL_SCRIPT  ?= install -m 0755
 INSTALL_DIR     ?= install -d
 
+all:	wopr
+
 wopr: wopr.c
 	$(CC) $(CFLAGS) -o ${.TARGET} ${.ALLSRC}
-
-install:
 
 install: wopr
 	${INSTALL_DIR} ${DESTDIR}${PREFIX}/bin
