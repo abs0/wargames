@@ -1,7 +1,5 @@
 #!/bin/sh
 
-PATH=/bin:/usr/bin:/usr/games:/usr/local/sbin
-
 # (Standard 2 clause BSD licence)
 # 
 # Copyright (c) 2012 David Brownlee <abs@absd.org>
@@ -29,7 +27,7 @@ PATH=/bin:/usr/bin:/usr/games:/usr/local/sbin
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-# Determine the directory containing this script
+# Add the directory containing this script to the path
 case "$0" in
     /*) PATH=$PATH:$(dirname $0) ;;
     *)  PATH=$PATH:$(dirname $PWD/$0) ;;
