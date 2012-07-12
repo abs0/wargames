@@ -99,6 +99,8 @@ phase_logon()
 	    sleep 1
 	    exit
 	    ;;
+	'')
+	    ;;
 	000001 | * )
 	    actual_d 000001
 	    wopr "IDENTIFICATION NOT RECOGNIZED BY SYSTEM" \
@@ -147,6 +149,9 @@ GLOBAL THERMONUCLEAR WAR"
 	*Joshua* | *joshua* )
 	    actual_d "LOGON:  Joshua"
 	    phase=falken
+	    ;;
+	'' )
+	    phase=logon
 	    ;;
     esac
     wopr '' ''
