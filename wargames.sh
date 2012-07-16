@@ -42,7 +42,7 @@ esac
 actual()
 {
     if [ "$a" != "$1" ] ; then
-	tput up ; echo "$prompt$1"
+	tput cuu1 ; tput dl1; echo "$prompt$1"
     fi
 }
 
@@ -94,7 +94,7 @@ phase_logon()
 	    ;;
 	Falkens-Maze | Armageddon )
 	    actual_d "$a"
-	    wopr "IDENTIFICATION NOT RECOGNIZED BY SYSTEM" \
+	    wopr -- "IDENTIFICATION NOT RECOGNIZED BY SYSTEM" \
 	         "--CONNECTION TERMINATED--" ""
 	    sleep 1
 	    exit
@@ -103,7 +103,7 @@ phase_logon()
 	    ;;
 	000001 | * )
 	    actual_d 000001
-	    wopr "IDENTIFICATION NOT RECOGNIZED BY SYSTEM" \
+	    wopr -- "IDENTIFICATION NOT RECOGNIZED BY SYSTEM" \
 	         "--CONNECTION TERMINATED--" ""
 	    sleep 1
 	    exit
