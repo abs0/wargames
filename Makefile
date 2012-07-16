@@ -9,7 +9,7 @@ INSTALL_DIR     ?= install -d
 all:	wopr
 
 wopr: wopr.c
-	$(CC) $(CFLAGS) -o ${.TARGET} ${.ALLSRC}
+	$(CC) $(CFLAGS) -o wopr wopr.c
 
 install: wopr
 	${INSTALL_DIR} ${DESTDIR}${PREFIX}/bin
