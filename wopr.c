@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 
 /*
  (Standard 2 clause BSD licence)
 
- Copyright (c) 2012 David Brownlee <abs@absd.org>
+ Copyright (c) 2012, 2016 David Brownlee <abs@absd.org>
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -31,7 +32,12 @@
  POSSIBILITY OF SUCH DAMAGE.
  */
 
+static int inputline();
 static void wopr(char ch);
+
+#define LINE_LENGTH 1024
+#define TELNET_IAC 255
+#define TELNET_MIN_COMMAND 240
 
 int cdelay = 10 * 1000;
 int ldelay = 10 * 1000;
@@ -40,11 +46,15 @@ int main(int argc, char **argv)
 {
     extern char *optarg;
     extern int optind;
+    int iflag = 0;
     int nflag = 0;
     int ch;
 
-    while ((ch = getopt(argc, argv, "c:l:n")) != -1) {
+    while ((ch = getopt(argc, argv, "c:il:n")) != -1) {
             switch (ch) {
+            case 'i':
+		    iflag = 1;
+                    break;
             case 'c':
 		    cdelay = atoi(optarg) * 1000;
                     break;
@@ -58,15 +68,19 @@ int main(int argc, char **argv)
             default:
 		    fprintf(stderr, "usage: wopr [opt] arg [arg2 ...]\n");
 		    fprintf(stderr, "opt: -c msec Delay per character\n");
+		    fprintf(stderr, "     -i      Read and (cleanup telnet) input line\n");
 		    fprintf(stderr, "     -l msec Delay per line\n");
 		    fprintf(stderr, "     -n      No new line\n");
-                    exit(1);
+                    exit(EXIT_FAILURE);
             }
     }
     argc -= optind;
     argv += optind;
 
-    if(!*argv && ! nflag)
+    if (iflag) {
+        exit(inputline());
+    }
+    if (!*argv && ! nflag)
 	wopr('\n');
     while (*argv)
 	{
@@ -77,7 +91,34 @@ int main(int argc, char **argv)
 	    wopr('\n');
 	++argv;
 	}
-    return 0;
+    exit(EXIT_SUCCESS);
+}
+
+static int inputline() {
+    char buf[LINE_LENGTH];
+    char *ptr;
+    char *endptr;
+
+    if (fgets(buf, sizeof(buf), stdin) == NULL) {
+        return EXIT_FAILURE;
+    }
+    ptr = buf;
+
+    /* Very simplistic - assumes all commands take a single character arg */
+    for (ptr = buf ; (unsigned char)*ptr == TELNET_IAC &&
+        (unsigned char)ptr[1] >= TELNET_MIN_COMMAND && ptr[2]; ptr += 3) {
+        ;
+    }
+
+    /* Strip trailing newline or CR - to handle telnet raw mode */
+    endptr = strchr(ptr, 0);
+    while (endptr > ptr && (endptr[-1] == 0x0d || endptr[-1] == 0x0a)) {
+      --endptr;
+    }
+    *endptr = 0;
+
+    fputs(ptr, stdout);
+    return EXIT_SUCCESS;
 }
 
 static void wopr(char ch)

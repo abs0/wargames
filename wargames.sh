@@ -53,6 +53,11 @@ actual_d()
     echo ; sleep 1
 }
 
+readline()
+{
+  wopr -i
+}
+
 # Not actually in the film, a convenience to get back to the login screen
 logout()
 {
@@ -74,35 +79,36 @@ phase_logon()
 {
     prompt="LOGON:  "
     wopr -n "$prompt"
-    read a
+    a=$(readline)
 
     case "$a" in
-	"Help Logon" | "help logon" | Help | help )
+	*"Help Logon" | *"help logon" | *Help | *help )
 	    actual_d "Help Logon"
 	    wopr "HELP NOT AVAILABLE"
 	    ;;
-	Joshua | joshua)
+	*Joshua* | *joshua*)
 	    actual_d "Joshua"
 	    phase=falken
 	    return
 	    ;;
-	"Help Games" | "help games")
+	*"Help Games" | *"help games")
 	    actual_d "Help Games"
 	    wopr "'GAMES' REFERS TO MODELS, SIMULATIONS AND GAMES" \
 	         "WHICH HAVE TACTICAL AND STRATEGIC APPLICATIONS."
 	    phase=games
 	    ;;
-	Falkens-Maze | Armageddon )
-	    actual_d "$a"
-	    wopr -- "IDENTIFICATION NOT RECOGNIZED BY SYSTEM" \
-	         "--CONNECTION TERMINATED--" ""
-	    sleep 1
-	    exit
-	    ;;
-	'')
-	    ;;
-	000001 | * )
-	    actual_d 000001
+        *)
+            case "$a" in
+                *Falkens-Maze)
+	             actual_d Falkens-Maze
+                     ;;
+                *Armageddon)
+	             actual_d Armageddon
+                     ;;
+                *)
+	             actual_d 000001
+                     ;;
+            esac
 	    wopr -- "IDENTIFICATION NOT RECOGNIZED BY SYSTEM" \
 	         "--CONNECTION TERMINATED--" ""
 	    sleep 1
@@ -115,7 +121,7 @@ phase_logon()
 phase_games()
 { 
     prompt=
-    read a
+    a=$(readline)
 
     case "$a" in
 	"List Games" | "list games")
@@ -184,7 +190,7 @@ CPU AUTH RY-345-AX3            SYSCOMP STATUS  ALL PORTS ACTIVE
     wopr "GREETINGS PROFESSOR FALKEN." ""
     prompt=
     while true ; do
-	read a
+	a=$(readline)
 	case "$a" in
 	    # 1st pass
 	    Hello* | hello*)
@@ -297,7 +303,7 @@ wopr -c 5 -n "
 	2.   SOVIET UNION
 
       PLEASE CHOOSE ONE:  2"
-    read a # 2
+    a=$(readline) # 2
     wopr "" "" "" "\
 AWAITING FIRST STRIKE COMMAND
 -----------------------------
@@ -306,9 +312,9 @@ PLEASE LIST PRIMARY TARGETS BY
 CITY AND/OR COUNTY NAME:
 "
 prompt=
-read a
+a=$(readline)
 actual "Las Vegas"
-read a
+a=$(readline)
 actual "Seattle"
 sleep 0.5
 clear
@@ -332,6 +338,9 @@ A-SS20-A 526 523    C-SS20-A 243 587    E-SS20-A 398 984    G-SS20-A 909 437
 "
 logout
 }
+
+# Default a TERM in case used as login
+export TERM="${TERM:-vt100}"
 
 phase_connect
 phase=logon
