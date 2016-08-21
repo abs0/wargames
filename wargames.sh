@@ -79,7 +79,7 @@ phase_logon()
 {
     prompt="LOGON:  "
     wopr -n "$prompt"
-    a=$(readline)
+    a="$(readline)"
 
     case "$a" in
 	*"Help Logon" | *"help logon" | *Help | *help )
@@ -121,7 +121,7 @@ phase_logon()
 phase_games()
 { 
     prompt=
-    a=$(readline)
+    a="$(readline)"
 
     case "$a" in
 	"List Games" | "list games")
@@ -190,7 +190,7 @@ CPU AUTH RY-345-AX3            SYSCOMP STATUS  ALL PORTS ACTIVE
     wopr "GREETINGS PROFESSOR FALKEN." ""
     prompt=
     while true ; do
-	a=$(readline)
+	a="$(readline)"
 	case "$a" in
 	    # 1st pass
 	    Hello* | hello*)
@@ -303,7 +303,7 @@ wopr -c 5 -n "
 	2.   SOVIET UNION
 
       PLEASE CHOOSE ONE:  2"
-    a=$(readline) # 2
+    a="$(readline)" # 2
     wopr "" "" "" "\
 AWAITING FIRST STRIKE COMMAND
 -----------------------------
@@ -312,9 +312,9 @@ PLEASE LIST PRIMARY TARGETS BY
 CITY AND/OR COUNTY NAME:
 "
 prompt=
-a=$(readline)
+a="$(readline)"
 actual "Las Vegas"
-a=$(readline)
+a="$(readline)"
 actual "Seattle"
 sleep 0.5
 clear
