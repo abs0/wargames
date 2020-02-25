@@ -291,8 +291,9 @@ phase_gtn()
 {
 sleep 2
 clear
+cat map
 wopr -c 5 -n "
-<map>
+
 
 
            UNITED STATES           SOVIET UNION
