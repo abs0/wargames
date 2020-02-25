@@ -20,9 +20,11 @@ sleep 1
 sudo adduser wopr
 echo "OK!"
 sleep 3
-sudo usermod -aG wopr
+sudo usermod -aG sudo wopr
 git clone https://github.com/aawheatley/wargames
 sudo mv wargames /home/wopr/
 cd /home/wopr/wargames
+gcc wopr.c wopr
+./wopr
 sleep 1
 sh wargames.sh
